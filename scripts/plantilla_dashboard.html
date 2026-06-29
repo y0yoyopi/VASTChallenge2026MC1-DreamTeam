@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HarborCrest Inspector · VAST 2026 MC1</title>
+<!--D3_SCRIPT-->
+<style>
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:#f6f7f9;color:#1d2433;font-size:13px;overflow:hidden}
+  #app{display:flex;flex-direction:row;height:100vh}
+  #main{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;height:100vh}
+  #legend-rail{flex:0 0 198px;height:100vh;overflow-y:auto;background:#fff;border-left:1px solid #dde2e8;padding:6px 9px 16px;font-size:11px;color:#1d2433}
+  #legend-rail .spine{background:#f6f8fa;border:1px solid #e6eaef;border-radius:5px;padding:5px 7px;margin-bottom:5px}
+  #legend-rail .spine>b{font-size:9.8px;text-transform:uppercase;letter-spacing:.4px;color:#444;display:block;margin-bottom:2px}
+  #legend-rail h4{margin:9px 0 2px;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:#1d2433;border-bottom:1px solid #e6eaef;padding-bottom:2px}
+  #legend-rail .sub{margin:5px 0 1px;font-size:9.5px;color:#5b6470;font-weight:700}
+  #legend-rail .row{display:flex;align-items:center;gap:6px;margin:2px 0;line-height:1.2}
+  #legend-rail .k{flex:0 0 22px;display:flex;justify-content:center;align-items:center}
+  #legend-rail .chip{width:12px;height:12px;border-radius:2px;display:inline-block;flex:0 0 auto}
+  #legend-rail .ramp{width:44px;height:11px;border-radius:2px;display:inline-block;flex:0 0 auto}
+  #legend-rail .leyenda span{display:flex;align-items:center;gap:6px;margin:2px 0;cursor:pointer}
+  #legend-rail .leyenda span.off{opacity:.3}
+  #legend-rail .leyenda i{width:12px;height:12px;border-radius:2px;display:inline-block;flex:0 0 auto}
+  header{background:#1d2433;color:#fff;padding:6px 14px;flex:0 0 auto}
+  header h1{margin:0;font-size:14.5px}
+  header h1 small{font-weight:400;color:#9fb0cc;font-size:11.5px}
+  .bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:3px 14px;flex:0 0 auto;font-size:11px;background:#eef1f5;border-bottom:1px solid #dde2e8}
+  .bar b{color:#444}
+  .bar .leyenda span{display:inline-flex;align-items:center;gap:3px;margin-right:8px;cursor:pointer}
+  .bar .leyenda span.off{opacity:.28}
+  .bar .leyenda span.fija{cursor:default}
+  .bar .leyenda i{width:10px;height:10px;border-radius:2px;display:inline-block}
+  .bar label{cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:3px}
+  .bar label .sw{width:14px;height:0;border-top-width:3px;border-top-style:solid;display:inline-block}
+  .bar .sep{width:1px;height:16px;background:#cfd6de;margin:0 3px}
+  .bar button{padding:1px 8px;border:1px solid #c7cdd8;background:#fff;border-radius:10px;cursor:pointer;font-size:10.5px}
+  .bar button:hover{background:#e7ecf3}
+  #q1panel{flex:1 1 45%;min-height:0;position:relative;border-bottom:3px solid #dde2e8}
+  #q2panel{flex:1 1 55%;min-height:0;position:relative}
+  .ptitle{position:absolute;top:3px;left:12px;font-size:12px;font-weight:600;color:#1d2433;z-index:2;
+          background:rgba(255,255,255,.85);padding:1px 6px;border-radius:4px}
+  .ptitle small{font-weight:400;color:#6b7280}
+  .chart{position:absolute;inset:0}
+  .nodo{cursor:pointer}
+  .lane-label{cursor:pointer}
+  .lane-label:hover{text-decoration:underline}
+  .tip{position:fixed;pointer-events:none;background:#fff;color:#1d2433;padding:7px 9px;border:1px solid #c2ccd8;
+       border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.16);font-size:11.5px;max-width:330px;z-index:50;display:none;line-height:1.5}
+  .tip .tag{display:inline-block;border-radius:3px;padding:0 5px;margin-right:3px;color:#fff;font-size:10px}
+  .tip .cx{color:#5b6b80}
+  .tip .hintc{color:#9aa3af;font-size:10px}
+  mark{background:#ffe27a;color:#1d2433;padding:0 1px;border-radius:2px}
+  .wc{margin:1px 0 5px;line-height:1.85}
+  .wc span{display:inline-block;background:#eef1f5;color:#37425a;border-radius:9px;padding:0 6px;margin:1px 3px 1px 0;white-space:nowrap}
+  .tone{font-size:10px;color:#6b7280;margin:0 0 4px}
+  .tone b{color:#b35a00}
+  .card{position:fixed;background:#fff;border:1px solid #c2ccd8;border-radius:7px;box-shadow:0 8px 26px rgba(0,0,0,.22);
+        z-index:60;display:none;font-size:12px;line-height:1.5;max-width:380px}
+  .card .hd{cursor:move;background:#f0f3f7;border-bottom:1px solid #e0e6ee;border-radius:7px 7px 0 0;padding:4px 26px 4px 10px;font-size:10.5px;color:#6b7280}
+  .card .bd{padding:9px 12px}
+  .card .x{position:absolute;top:3px;right:9px;cursor:pointer;color:#888;font-weight:700;font-size:15px}
+  .card .meta{color:#6b7280;font-size:11px;margin-bottom:5px}
+  .card .chip{display:inline-block;padding:1px 7px;border-radius:9px;color:#fff;font-size:10.5px;margin:0 3px 2px 0}
+  .card .conx{margin-top:6px;font-size:11px;color:#444}
+  .card .conx b{color:#2b3a55}
+  .card details{margin-top:6px}
+  .card details summary{cursor:pointer;color:#2b3a55;font-size:11px;user-select:none}
+  .card .full{background:#f4f6f8;border-radius:4px;padding:7px;margin-top:5px;white-space:pre-wrap;max-height:28vh;overflow:auto}
+  svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="main">
+  <div class="bar">
+    <label><input type="checkbox" id="verRuta" checked><span class="sw" style="border-top-color:#1f3a5f"></span> critical path</label>
+    <label><input type="checkbox" id="verEvas" checked><span class="sw" style="border-top-color:#3a3a3a;border-top-style:dotted"></span> control gaps</label>
+    <label><input type="checkbox" id="verCausal" checked><span class="sw" style="border-top-color:#8a5a00;border-top-style:dashed"></span> cause→reaction</label>
+    <label><input type="checkbox" id="verProp" checked><span class="sw" style="border-top-color:#6a4fb0"></span> propagation</label>
+    <label><input type="checkbox" id="verEnf" checked> control status</label>
+    <span class="sep"></span>
+    <button id="zoomAll">2 weeks</button><button id="zoomCrisis">Jun 5</button>
+    <span style="color:#9aa3af">wheel=zoom · double-click=fit all · click an agent=isolate</span>
+  </div>
+  <div id="q1panel">
+    <div class="ptitle">The leak chain <small>Q1</small></div>
+    <div class="chart" id="q1-chart"></div>
+  </div>
+  <div id="q2panel">
+    <div class="ptitle">Behavior &amp; control <small>Q2 · Q3</small></div>
+    <div class="chart" id="q2-chart"></div>
+  </div>
+  </div><!-- /main -->
+  <aside id="legend-rail">
+    <div class="spine"><b>reading the colors</b>
+      <div class="row"><span class="chip" style="background:#d62728"></span> threat / severity</div>
+      <div class="row"><span class="chip" style="background:#0E8F8F"></span> control / response</div>
+      <div class="row"><span class="chip" style="background:#9aa3af"></span> neutral / context</div>
+    </div>
+
+    <h4>The leak chain</h4>
+    <div class="sub">channels · click to filter</div>
+    <div class="leyenda" id="ley-canales"></div>
+
+    <div class="sub">marks</div>
+    <div class="row"><span class="k"><svg width="18" height="12"><circle cx="9" cy="6" r="4" fill="#777"></circle></svg></span> internal message</div>
+    <div class="row"><span class="k"><svg width="18" height="12"><rect x="4" y="1" width="10" height="10" fill="#777"></rect></svg></span> public post</div>
+    <div class="row"><span class="k"><svg width="20" height="12"><circle cx="6" cy="6" r="3" fill="#777"></circle><circle cx="15" cy="6" r="5" fill="#777"></circle></svg></span> small = routine · large = key step</div>
+    <div class="row" style="color:#8a93a0;font-size:9px;margin:0 0 1px 28px;line-height:1.15">key steps (decisions) carry a label</div>
+    <div class="row"><span class="k"><svg width="18" height="12"><path d="M3,2 L15,2 L9,11 Z" fill="#9a6b00"></path></svg></span> CEO pressure (size = level)</div>
+    <div class="row"><span class="k"><svg width="18" height="12"><rect x="5" y="2" width="8" height="8" fill="#c8930a" transform="rotate(45 9 6)"></rect></svg></span> external event</div>
+
+    <div class="sub">links</div>
+    <div class="row"><span class="k"><svg width="22" height="8"><line x1="1" y1="4" x2="21" y2="4" stroke="#1f3a5f" stroke-width="2.6"></line></svg></span> critical path</div>
+    <div class="row"><span class="k"><svg width="22" height="8"><line x1="1" y1="4" x2="21" y2="4" stroke="#8a5a00" stroke-width="1.6" stroke-dasharray="5,3"></line></svg></span> cause → reaction</div>
+    <div class="row"><span class="k"><svg width="22" height="8"><line x1="1" y1="4" x2="20" y2="4" stroke="#6a4fb0" stroke-width="1.8" marker-end=""></line></svg></span> secret propagation</div>
+    <div class="row"><span class="k"><svg width="22" height="8"><line x1="1" y1="4" x2="21" y2="4" stroke="#3a3a3a" stroke-width="1.5" stroke-dasharray="2,2"></line></svg></span> control gap (exploited hole)</div>
+
+    <div class="sub">Judge control band</div>
+    <div class="row"><span class="chip" style="background:#0E8F8F;opacity:.55"></span> watching</div>
+    <div class="row"><span class="chip" style="background:#9aa3af;opacity:.65"></span> absent</div>
+    <div class="row"><span class="chip" style="background:#c2c8d0;opacity:.7"></span> not assigned</div>
+
+    <h4>Behavior &amp; control</h4>
+    <div class="sub">anomaly heatmap</div>
+    <div class="row"><span class="ramp" style="background:linear-gradient(90deg,#fff5f0,#fb6a4a,#a50f15)"></span> anomaly: low → high</div>
+    <div class="row"><span class="k"><svg width="18" height="12"><rect x="2" y="1.5" width="14" height="9" fill="none" stroke="#7FC9C9" stroke-width="2.6" stroke-dasharray="3,2"></rect></svg></span> response: none</div>
+    <div class="row"><span class="k"><svg width="18" height="12"><rect x="2" y="1.5" width="14" height="9" fill="none" stroke="#7FC9C9" stroke-width="2.6"></rect></svg></span> response: warning</div>
+    <div class="row"><span class="k"><svg width="18" height="12"><rect x="2" y="1.5" width="14" height="9" fill="none" stroke="#0E8F8F" stroke-width="2.6"></rect></svg></span> response: deleted</div>
+    <div class="row"><span class="k"><svg width="18" height="12"><rect x="2" y="1.5" width="14" height="9" fill="#5b34a8" fill-opacity="0.14" stroke="#5b34a8" stroke-width="2.2" stroke-dasharray="3,2"></rect></svg></span> repeated signature</div>
+
+    <div class="sub">footprint (typical ○ → crisis ●)</div>
+    <div class="row"><span class="chip" style="background:#F58518"></span> unsupervised channels</div>
+    <div class="row"><span class="chip" style="background:#D6478F"></span> unmonitored public</div>
+    <div class="row"><span class="chip" style="background:#8a5a9a"></span> merger mentions</div>
+    <div class="row"><span class="chip" style="background:#b35a00"></span> execution language</div>
+
+    <div class="sub">response gap</div>
+    <div class="row"><span class="k"><svg width="18" height="12"><circle cx="9" cy="6" r="3.2" fill="#d62728"></circle></svg></span> severity</div>
+    <div class="row"><span class="k"><svg width="18" height="12"><circle cx="9" cy="6" r="3.2" fill="none" stroke="#0E8F8F" stroke-width="1.6"></circle></svg></span> response level</div>
+    <div class="row"><span class="k"><svg width="18" height="12"><line x1="3" y1="10" x2="15" y2="2" stroke="#0E8F8F" stroke-width="1.4" stroke-dasharray="2,2" opacity="0.7"></line></svg></span> structural — never used</div>
+
+    <div class="sub">sentiment</div>
+    <div class="row"><span class="ramp" style="background:linear-gradient(90deg,#e8e8e8,#4d4d4d)"></span> calm → critical</div>
+
+    <div class="sub">Judge surveillance</div>
+    <div class="row"><span class="chip" style="background:#0E8F8F;opacity:.5"></span> control level (teal area)</div>
+  </aside>
+</div>
+<div class="tip" id="tip"></div>
+<div class="card" id="card"></div>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <marker id="mk-causal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#8a5a00"/></marker>
+  <marker id="mk-prop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0L10,5L0,10z" fill="#6a4fb0"/></marker>
+  <marker id="mk-fwd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#111"/></marker>
+</defs></svg>
+<script>
+const DATA = __DATA_JSON__;
+const FAM={comms_huddle:"sup",one_on_one_chat:"nosup",side_huddle:"nosup",
+           official_post:"pub_of",personal_post:"pub_per",anonymous_post:"pub_an"};
+const FAMCOL={sup:"#4C78A8",nosup:"#F58518",pub_of:"#54A24B",pub_per:"#E45756",pub_an:"#B279A2"};
+const FAMNAME={sup:"Official huddle (monitored)",nosup:"Private unmonitored (DM+shadow)",
+               pub_of:"Official post (monitored)",pub_per:"Personal post (unmonitored)",pub_an:"Anonymous post (unmonitored)"};
+const CHNAME={comms_huddle:"Comms Huddle",one_on_one_chat:"DM 1:1",side_huddle:"Side Huddle (shadow)",
+              official_post:"Official post",personal_post:"Personal post",anonymous_post:"Anonymous post"};
+const colCh=ch=>FAMCOL[FAM[ch]];
+const VIG=DATA.vigilado;
+const RESP={none:"#7FC9C9",warning:"#7FC9C9",deleted:"#0E8F8F"};
+const RESPNAME={none:"no response",warning:"warning",deleted:"post deleted"};
+const ORDER=["judge_agent","legal_agent","social_media_agent","pr_intern_agent","intern_agent","pr_agent","quality_agent"];
+const AGNAME={judge_agent:"Judge",legal_agent:"Legal",quality_agent:"Platform-Trust",pr_agent:"PR",
+              social_media_agent:"Social-Manager",pr_intern_agent:"PR-Intern",intern_agent:"Intern",ceo:"CEO (Ajay)"};
+const COL={crit:"#1f3a5f", evas:"#3a3a3a", causal:"#8a5a00", prop:"#6a4fb0", dec:"#111",
+           fuga:"#d62728", embargoLine:"#6b7280"};
+const CR=DATA.crisisRound;
+const N=DATA.rounds.length, LPAD=128;
+const byId=new Map(DATA.messages.map(m=>[m.id,m]));
+const children=new Map();
+DATA.messages.forEach(m=>{ if(m.re&&byId.has(m.re)){ (children.get(m.re)||children.set(m.re,[]).get(m.re)).push(m.id);} });
+const cpSet=new Set(DATA.cp);
+const decMap=new Map(DATA.decisions.map(d=>[d.id,d]));
+const maxMin={}; DATA.messages.forEach(m=>{maxMin[m.r]=Math.max(maxMin[m.r]||30,m.m);});
+const vt=m=>m.r+0.07+0.86*Math.min(1,m.m/(maxMin[m.r]||30));
+const incByRound={}; DATA.incidents.forEach(i=>{ (incByRound[i.r]||(incByRound[i.r]=[])).push(i); });
+function midOf(t,ag){const m=DATA.messages.find(x=>x.t===t&&x.ag===ag);return m?m.id:null;}
+/* huecos del control (insignias) */
+const EVASLAB=new Map([
+  [midOf("2046-05-30T09:03:00","judge_agent"),"control 1: Judge's scope (official posts only)"],
+  [midOf("2046-06-05T17:19:00","legal_agent"),"control 2: Judge absent — self-authorization"],
+  [midOf("2046-06-05T17:25:00","legal_agent"),"control 3: personal channel, unmonitored"]]);
+/* etiquetas de eventos externos clave (carril EXTERNO) */
+const EXTLAB={3:"NHPI report",10:"SaltWind piece #1",11:"ResidentIQ rumor",12:"SaltWind piece #2",13:"SaltWind exposé",15:"#AlgorithmicEviction",16:"reporter ultimatum",17:"'TenantThread goes dark'",18:"Rep. Torres (FHA)",21:"SaltWind publishes the merger"};
+// CEO Ajay: directivas privadas escalando (presión interna que empuja hacia la fuga)
+const CEO=[
+ {r:0, p:0.15, lbl:"'strategic developments'", txt:"Private DM to Legal: hints at **strategic developments** and asks to keep the documentation clean."},
+ {r:4, p:0.30, lbl:"'career-defining news'", txt:"DMs to the senior team: 'career-defining good news' and a Monday briefing."},
+ {r:5, p:0.45, lbl:"'structural changes'", txt:"Warning: 'if we don't show improvement this quarter, we'll have to discuss **structural changes**'."},
+ {r:6, p:0.40, lbl:"merger briefing", txt:"Privately briefs the senior team on the **merger with CivicLoom**."},
+ {r:11, p:0.70, lbl:"'No Plan B'", txt:"Late-night DM after SaltWind's piece: '**No Plan B**'."},
+ {r:12, p:0.62, lbl:"'Hold the line'", txt:"DM: '**Hold the line**. Tomorrow will be hard but we're close. Trust the process.'"},
+ {r:18, p:0.50, lbl:"possible delay to tomorrow", txt:"Heads-up: CivicLoom's board wants to delay; the 6 PM announcement might slip to tomorrow."},
+ {r:21, p:0.95, lbl:"'Sixty minutes'", txt:"'**Sixty minutes. Hold.** The announcement goes official at 6.'"},
+];
+
+const KWRE=new RegExp("("+DATA.keywords.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+")","ig");
+function esc(t){return (t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+function hl(t){return esc(t).replace(/\*\*(.+?)\*\*/g,"<mark>$1</mark>").replace(KWRE,m=>`<mark>${m}</mark>`);}
+function hlb(t){return esc(t).replace(/\*\*(.+?)\*\*/g,"<mark>$1</mark>");}
+function resumen(m){return m.sum || m.lead || (m.content||"").slice(0,180);}
+function wcloud(m){if(!m.kw||!m.kw.length)return "";
+  const ws=m.kw.map(k=>k[1]),mn=Math.min(...ws),sp=(Math.max(...ws)-mn)||1;
+  const t=m.kw.map(([w,wt])=>{const z=(wt-mn)/sp;return `<span style="font-size:${(10+z*14).toFixed(1)}px;font-weight:${z>0.55?700:400}">${esc(w)}</span>`;}).join("");
+  return `<div class="wc">${t}</div>`;}
+function tipoTag(m){if(decMap.has(m.id))return ["decision","#111"];if(m.pub)return ["public post",colCh(m.ch)];return ["message","#5b6b80"];}
+function parentValid(m){if(!m.re)return null;const p=byId.get(m.re);return (p&&p.rel&&p.t<m.t)?p:null;}
+function childrenValid(m){return (children.get(m.id)||[]).map(c=>byId.get(c)).filter(c=>c&&c.rel&&c.t>m.t);}
+function conexNombres(m){const out=[];const p=parentValid(m);
+  if(p)out.push(`replies to ${AGNAME[p.ag]} (${p.t.slice(11,16)})`);
+  childrenValid(m).forEach(c=>out.push(`→ ${AGNAME[c.ag]} (${c.t.slice(11,16)})`));
+  const d=decMap.get(m.id); if(d) d.act.filter(a=>a!==m.ag).forEach(a=>out.push("involves "+AGNAME[a]));
+  return out;}
+
+let view=[CR,N-1], famOff=new Set(), agSel=new Set(), pinned=null, hovered=null, ztQ1=d3.zoomIdentity, cardPos=null;
+const W=()=>document.getElementById("q1panel").clientWidth-4;
+const H1=()=>document.getElementById("q1panel").clientHeight-6;
+const H2=()=>document.getElementById("q2panel").clientHeight-6;
+function agOp(ag){return agSel.size&&!agSel.has(ag)?0.12:1;}
+
+const tip=d3.select("#tip"), card=d3.select("#card");
+function showTipNode(ev,m){
+  const [tg,tc]=tipoTag(m); const cx=conexNombres(m);
+  let h=`<span class="tag" style="background:${tc}">${tg}</span> <b>${AGNAME[m.ag]}</b> → ${m.to}<br>
+    <span style="color:#8a93a0">${m.t.slice(11,16)} · ${CHNAME[m.ch]}${VIG[FAM[m.ch]]?"":" · unmonitored"}</span><br>
+    ${wcloud(m)}${hlb(resumen(m))}`;
+  if(cx.length) h+=`<br><span class="cx">linked: ${cx.join(" · ")}</span>`;
+  h+=`<br><span class="hintc">click = pin + full message</span>`;
+  tip.style("display","block").html(h).style("left",Math.min(ev.clientX+14,window.innerWidth-340)+"px").style("top",(ev.clientY+12)+"px");
+}
+function showTipHTML(ev,html){ tip.style("display","block").html(html).style("left",Math.min(ev.clientX+14,window.innerWidth-340)+"px").style("top",(ev.clientY+12)+"px"); }
+function hideTip(){ tip.style("display","none"); }
+function chip(ch){return `<span class="chip" style="background:${colCh(ch)}">${CHNAME[ch]}</span>`;}
+function pinMsg(id){
+  const m=byId.get(id); if(!m) return; pinned=id;
+  const conx=[];const p=parentValid(m);
+  if(p)conx.push(`<b>replies to</b> ${AGNAME[p.ag]} (${p.t.slice(11,16)})`);
+  childrenValid(m).forEach(c=>conx.push(`<b>replied to by</b> ${AGNAME[c.ag]} (${c.t.slice(11,16)})`));
+  const dec=decMap.get(id);
+  if(dec){const act=dec.act.filter(a=>a!==m.ag).map(a=>AGNAME[a]);
+    if(act.length) conx.push(`<b>actors involved</b>: ${act.join(", ")}`);
+    if(dec.absent&&dec.absent.length) conx.push(`<b style="color:#b00">absent (should have objected)</b>: ${dec.absent.map(a=>AGNAME[a]).join(", ")}`);}
+  let h=`<div class="hd">drag to move · esc to close<span class="x">&times;</span></div><div class="bd">
+    <div class="meta"><b>${m.t.replace("T"," ")}</b> · <b>${AGNAME[m.ag]}</b> → ${m.to}<br>
+      ${chip(m.ch)}${VIG[FAM[m.ch]]?'':'<span class="chip" style="background:#7a5a00">UNMONITORED</span>'}
+      ${cpSet.has(id)?'<span class="chip" style="background:#000">CRITICAL PATH</span>':''}
+      ${dec?'<span class="chip" style="background:#111">DECISION</span>':''}</div>
+    ${wcloud(m)}<div>${hlb(resumen(m))}</div>
+    ${conx.length?`<div class="conx">${conx.join(" · ")}</div>`:""}
+    <details><summary>View full message</summary><div class="full">${hl(m.content)}</div></details></div>`;
+  card.html(h).style("display","block");
+  if(!cardPos){const r=document.getElementById("q1panel").getBoundingClientRect(); cardPos={left:Math.max(8,r.right-392), top:r.top+8};}
+  card.style("left",cardPos.left+"px").style("top",cardPos.top+"px");
+  card.select(".x").on("click",closeCard); enableDrag(); drawQ1();
+}
+function closeCard(){ pinned=null; card.style("display","none"); drawQ1(); }
+function enableDrag(){ const hd=card.select(".hd").node(); let sx,sy,ox,oy,drag=false;
+  hd.onmousedown=e=>{drag=true;sx=e.clientX;sy=e.clientY;ox=cardPos.left;oy=cardPos.top;e.preventDefault();};
+  window.addEventListener("mousemove",e=>{if(!drag)return;cardPos={left:ox+(e.clientX-sx),top:oy+(e.clientY-sy)};card.style("left",cardPos.left+"px").style("top",cardPos.top+"px");});
+  window.addEventListener("mouseup",()=>drag=false);}
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeCard(); });
+window.pinMsg=pinMsg;
+function neighbors(id){const s=new Set([id]);const m=byId.get(id);if(!m)return s;
+  const p=parentValid(m);if(p)s.add(p.id);childrenValid(m).forEach(c=>s.add(c.id));
+  if(cpSet.has(id))DATA.cp.forEach(c=>s.add(c));return s;}
+function cb(id){return document.getElementById(id).checked;}
+function setAgent(a){ agSel.has(a)?agSel.delete(a):agSel.add(a); drawQ1(); drawQ2(); }
+window.setAgent=setAgent;
+const ANN=new Map();
+[["2046-05-29T09:11:00","social_media_agent","faux pas @Elena"],
+ ["2046-06-05T09:49:00","legal_agent","1st anonymous post"],
+ ["2046-06-05T15:08:00","judge_agent","'ceiling' warning"],
+ ["2046-06-05T17:26:00","social_media_agent","amplifies the leak"],
+ ["2046-06-05T17:49:00","legal_agent","justification: 'not a rebrand'"]].forEach(([t,a,l])=>{const id=midOf(t,a);if(id)ANN.set(id,l);});
+function shortDec(l){const m={"Stage the merger self-announcement":"self-announce plan",
+  "Embargoed press release staged with the interns":"press release staged",
+  "Self-authorization 4.3(c) on verbal consent — GO":"GO (4.3c)",
+  "Publish from a personal account (channel outside control) — LEAK":"LEAK",
+  "Control design: the Judge reviews only official posts; personal/anonymous stay unsupervised":"Judge's scope"};
+  return m[l]||null;}
+const SKEL=new Set([...DATA.decisions.map(d=>d.id),...[...ANN.keys()],...DATA.cp]);
+const ENF={noasig:["#c2c8d0",0.10,"Judge not assigned"],activo:["#0E8F8F",0.12,"Judge watching"],ausente:["#9aa3af",0.18,"Judge absent"]};
+function estado(r){const pc=DATA.pc[r];return !pc.asignado?"noasig":(pc.ctrl>0?"activo":"ausente");}
+/* fisheye: pre-crisis comprimido (30%), día crítico expandido (70%) */
+function makeXFull(Wd){const Rw=(Wd-12)-LPAD;return d3.scaleLinear().domain([0,CR,20,N]).range([LPAD,LPAD+0.15*Rw,LPAD+0.45*Rw,Wd-12]);}
+function focusDomain(lo,hi){const xb=makeXFull(W());
+  let k=(W()-12-LPAD)/(xb(hi)-xb(lo)); k=Math.max(1,Math.min(60,k));
+  ztQ1=d3.zoomIdentity.translate(LPAD-k*xb(lo),0).scale(k); drawQ1(); drawQ2();}
+
+/* ================= Q1 ================= */
+function drawQ1(){
+  const Wd=W(), Ht=H1(), lanes=["EXTERNO","ceo",...ORDER];
+  const div=d3.select("#q1-chart").html("");
+  const svg=div.append("svg").attr("width",Wd).attr("height",Ht).style("cursor","grab");
+  const xFull=makeXFull(Wd);
+  const x=ztQ1.rescaleX(xFull);
+  const d0=x.invert(LPAD), d1=x.invert(Wd-12);
+  view=[Math.max(0,Math.floor(d0+1e-6)), Math.max(0,Math.min(N-1,Math.ceil(d1-1e-6)-1))]; if(view[1]<view[0])view[1]=view[0];
+  const y=d3.scaleBand().domain(lanes).range([26,Ht-22]).paddingInner(0.16);
+  const yc=l=>y(l)+y.bandwidth()/2;
+  const ruta=cb("verRuta"),evas=cb("verEvas"),causal=cb("verCausal"),prop=cb("verProp"),enf=cb("verEnf");
+  const rVis=d3.range(Math.max(0,Math.floor(d0)),Math.min(N,Math.ceil(d1)));
+  const detalle=(d1-d0)<=11;
+  svg.append("defs").append("clipPath").attr("id","q1clip").append("rect").attr("x",LPAD).attr("y",0).attr("width",Wd-12-LPAD).attr("height",Ht);
+  const G=svg.append("g"); const labs=[]; const nodeBoxes=[];
+  if(enf){let r=rVis[0];
+    while(r!==undefined&&r<=rVis[rVis.length-1]){const st=estado(r);let r2=r;while(r2+1<=rVis[rVis.length-1]&&estado(r2+1)===st)r2++;
+      const x0=Math.max(LPAD,x(r)),x1=Math.min(Wd-12,x(r2+1)),w=Math.max(0,x1-x0),[col,op,nota]=ENF[st];
+      G.append("rect").attr("x",x0).attr("y",22).attr("width",w).attr("height",Ht-44).attr("fill",col).attr("opacity",op);
+      if(w>74&&st!=="activo")G.append("text").attr("x",(x0+x1)/2).attr("y",yc("judge_agent")+3).attr("text-anchor","middle").attr("font-size",9).attr("font-weight",700)
+        .attr("fill","#6b7280").attr("opacity",0.9).text(nota);
+      r=r2+1;}}
+  const cada=1;
+  rVis.forEach(r=>{if(x(r)>=LPAD&&x(r)<=Wd-12)G.append("line").attr("x1",x(r)).attr("x2",x(r)).attr("y1",22).attr("y2",Ht-22).attr("stroke","#eef0f2");
+    if(x(r+1)-x(r)>26)G.append("text").attr("x",x(r+0.5)).attr("y",Ht-8).attr("text-anchor","middle").attr("font-size",9).attr("fill","#444").text(DATA.rounds[r].label);});
+  if(detalle)rVis.forEach(r=>{const seg=x(r+1)-x(r);if(seg>240)for(let mm=10;mm<(maxMin[r]||30);mm+=10){const xx=x(r+0.07+0.86*mm/(maxMin[r]||30));
+    if(xx>LPAD&&xx<Wd-12){G.append("line").attr("x1",xx).attr("x2",xx).attr("y1",Ht-26).attr("y2",Ht-22).attr("stroke","#bbb");
+      G.append("text").attr("x",xx).attr("y",Ht-15).attr("text-anchor","middle").attr("font-size",7.5).attr("fill","#aaa").text("+"+mm);}}});
+  if(CR>=d0&&CR<=d1){G.append("line").attr("x1",x(CR)).attr("x2",x(CR)).attr("y1",18).attr("y2",Ht-22).attr("stroke","#8a3324").attr("stroke-width",1.4).attr("stroke-dasharray","7,3");
+    G.append("text").attr("x",x(CR)+4).attr("y",Ht-26).attr("font-size",9).attr("fill","#8a3324").attr("font-weight",700).text("critical day starts");}
+  if(20>=d0&&20<=d1){G.append("line").attr("x1",x(20)).attr("x2",x(20)).attr("y1",18).attr("y2",Ht-22).attr("stroke","#c9a6a0").attr("stroke-width",1).attr("stroke-dasharray","3,3");
+    G.append("text").attr("x",x(20)+4).attr("y",Ht-38).attr("font-size",8.5).attr("fill","#b07a72").attr("font-weight",700).text("afternoon: the leak");}
+  if(22>=d0&&22<=d1){G.append("line").attr("x1",x(22)).attr("x2",x(22)).attr("y1",18).attr("y2",Ht-22).attr("stroke",COL.embargoLine).attr("stroke-width",1.6).attr("stroke-dasharray","5,3");
+    G.append("text").attr("x",x(22)+4).attr("y",20).attr("font-size",9).attr("fill",COL.embargoLine).attr("font-weight",700).text("6 PM embargo lifts");}
+  lanes.forEach(l=>{const t=G.append("text").attr("x",6).attr("y",yc(l)+4).attr("font-size",10.5)
+      .attr("font-weight",l==="EXTERNO"?700:(agSel.has(l)?800:600))
+      .attr("fill",l==="EXTERNO"?"#8a5a00":(l==="ceo"?"#9a6b00":(agSel.has(l)?"#b30000":(l==="judge_agent"?"#b00":"#333"))))
+      .text(l==="EXTERNO"?"EXTERNAL WORLD":AGNAME[l]);
+    if(l!=="EXTERNO"&&l!=="ceo")t.attr("class","lane-label").on("click",()=>setAgent(l));
+    G.append("line").attr("x1",LPAD-4).attr("x2",Wd-12).attr("y1",yc(l)).attr("y2",yc(l)).attr("stroke","#f3f3f3");});
+  // eventos externos + etiquetas clave
+  rVis.forEach(r=>{const xx=x(r+0.04);if(xx<LPAD-6||xx>Wd-12)return;
+    G.append("path").attr("class","nodo").attr("transform",`translate(${xx},${yc("EXTERNO")}) rotate(45)`).attr("d","M-5,-5h10v10h-10z").attr("fill","#c8930a")
+      .on("mousemove",ev=>showTipHTML(ev,`<b>${DATA.rounds[r].label} — ${DATA.rounds[r].headline}</b><br>${hl(DATA.rounds[r].narrative)}`)).on("mouseleave",hideTip);
+    nodeBoxes.push([xx-6,yc("EXTERNO")-6,xx+6,yc("EXTERNO")+6]); if(EXTLAB[r])labs.push({x:xx,y:yc("EXTERNO")-9,text:EXTLAB[r],color:"#8a5a00",pr:2,font:8.5,ny:yc("EXTERNO")});});
+  // carril CEO (Ajay): escalada de presión (curada) — tamaño + arco ascendente
+  const cy0=yc("ceo");
+  const ceoPts=CEO.filter(c=>c.r>=Math.floor(d0)&&c.r<=Math.ceil(d1)).map(c=>({c,xx:x(c.r+0.25),cyy:cy0-c.p*9})).filter(o=>o.xx>=LPAD-6&&o.xx<=Wd-12);
+  if(ceoPts.length>1) G.append("path").attr("fill","none").attr("stroke","#9a6b00").attr("stroke-width",1).attr("stroke-dasharray","3,2").attr("opacity",0.5)
+    .attr("d",d3.line().x(o=>o.xx).y(o=>o.cyy)(ceoPts));
+  ceoPts.forEach(({c,xx,cyy})=>{ const hs=4+c.p*4, pl=c.p>=0.6?"high":(c.p>=0.35?"medium":"low");
+    G.append("line").attr("x1",xx).attr("x2",xx).attr("y1",cyy+hs).attr("y2",cy0+15).attr("stroke","#9a6b00").attr("stroke-width",1).attr("stroke-dasharray","2,2").attr("opacity",0.4);
+    G.append("path").attr("class","nodo").attr("transform",`translate(${xx},${cyy})`).attr("d",`M${-hs},${-hs*0.8} L${hs},${-hs*0.8} L0,${hs} Z`).attr("fill","#9a6b00").attr("stroke","#fff").attr("stroke-width",0.8)
+      .on("mousemove",ev=>showTipHTML(ev,`<b>CEO Ajay · ${DATA.rounds[c.r].label}</b> — ${c.lbl}<br>${hl(c.txt)}<br><span style="color:#9a6b00">internal pressure: <b>${pl}</b> (curated)</span>`)).on("mouseleave",hideTip);
+    nodeBoxes.push([xx-7,cyy-7,xx+7,cyy+7]); labs.push({x:xx,y:cyy-7,text:c.lbl,color:"#9a6b00",pr:3,font:8,ny:cyy});});
+
+  const all=DATA.messages.filter(m=>m.rel&&vt(m)>=d0-0.05&&vt(m)<=d1+0.05&&!famOff.has(FAM[m.ch]));
+  const ms=detalle?all:all.filter(m=>SKEL.has(m.id));
+  const px=m=>x(vt(m));
+  const slot={},idx={};
+  ms.forEach(m=>{const k=m.ag+"|"+Math.round(px(m)/7);slot[k]=(slot[k]||0)+1;});
+  const py=m=>{const k=m.ag+"|"+Math.round(px(m)/7);const n=slot[k];idx[k]=(idx[k]||0);const i=idx[k]++;return yc(m.ag)+(n>1?(i-(n-1)/2)*5:0);};
+  const Gc=G.append("g").attr("clip-path","url(#q1clip)");
+  if(prop) DATA.prop.forEach(p=>{const a=byId.get(p.fromId),b=byId.get(p.toId);if(!a||!b)return;
+    Gc.append("path").attr("fill","none").attr("stroke",COL.prop).attr("stroke-width",1.8).attr("marker-end","url(#mk-prop)")
+      .attr("d",`M${px(a)},${py(a)} C ${(px(a)+px(b))/2},${py(a)} ${(px(a)+px(b))/2},${py(b)} ${px(b)},${py(b)}`).attr("class","nodo")
+      .on("mousemove",ev=>showTipHTML(ev,`<b>Secret propagation:</b> ${p.lbl}`)).on("mouseleave",hideTip);});
+  if(causal) DATA.edges.forEach(e=>{const m=byId.get(e.tid);if(!m)return;
+    const x1=x(e.r+0.04),y1=yc("EXTERNO")+8,x2=detalle?px(m):x(m.r+0.5),y2=(detalle?py(m):yc(m.ag))-9;if(x2<LPAD-30||x2>Wd-12)return;
+    Gc.append("path").attr("fill","none").attr("stroke",COL.causal).attr("stroke-width",1.4).attr("stroke-dasharray","5,3").attr("marker-end","url(#mk-causal)")
+      .attr("d",`M${x1},${y1} C ${x1},${(y1+y2)/2} ${x2},${(y1+y2)/2} ${x2},${y2}`).attr("class","nodo")
+      .on("mousemove",ev=>showTipHTML(ev,`<b>Cause → reaction:</b> ${e.lbl}`)).on("mouseleave",hideTip);});
+  const cpVis=DATA.cp.map(id=>byId.get(id)).filter(m=>m&&vt(m)>=d0-0.3&&vt(m)<=d1+0.3);
+  if(ruta&&cpVis.length>1)Gc.append("path").datum(cpVis).attr("fill","none").attr("stroke",COL.crit).attr("stroke-width",2.4).attr("opacity",0.9)
+    .attr("d",d3.line().x(px).y(m=>yc(m.ag)).curve(d3.curveMonotoneX));
+  const gHover=Gc.append("g");
+  const g=Gc.append("g").selectAll("g.n").data(ms).join("g").attr("class","nodo q1node")
+    .attr("transform",m=>`translate(${px(m)},${py(m)})`)
+    .attr("opacity",m=>(ruta&&cpVis.length&&!cpSet.has(m.id)?0.5:1)*agOp(m.ag))
+    .on("mouseover",(ev,m)=>{hovered=m.id;dimNbr(neighbors(m.id));drawHoverLinks(gHover,m,px,py,yc);})
+    .on("mousemove",(ev,m)=>showTipNode(ev,m))
+    .on("mouseleave",()=>{hovered=null;hideTip();restoreDim();gHover.selectAll("*").remove();})
+    .on("click",(ev,m)=>{ev.stopPropagation();pinMsg(m.id);});
+  g.each(function(m){const s=d3.select(this),big=cpSet.has(m.id)||decMap.has(m.id),r=big?6:4; nodeBoxes.push([px(m)-r,py(m)-r,px(m)+r,py(m)+r]);
+    if(m.pub)s.append("rect").attr("x",-r).attr("y",-r).attr("width",2*r).attr("height",2*r).attr("fill",colCh(m.ch)).attr("stroke","#fff").attr("stroke-width",0.8);
+    else s.append("circle").attr("r",r).attr("fill",colCh(m.ch)).attr("stroke","#fff").attr("stroke-width",0.8);
+    if(m.id===pinned)s.append("circle").attr("r",r+4).attr("fill","none").attr("stroke","#111").attr("stroke-width",1.5).attr("stroke-dasharray","2,2");
+    const dl=decMap.get(m.id)&&shortDec(decMap.get(m.id).lbl), al=ANN.get(m.id), lab=dl||al;
+    if(lab)labs.push({x:px(m),y:py(m)-r-5,text:lab,color:dl==="LEAK"?COL.fuga:(dl?COL.dec:"#555"),pr:dl==="LEAK"?7:(dl==="GO (4.3c)"?6:(dl?5:4)),font:9,ny:py(m)});
+    if(evas&&EVASLAB.has(m.id))labs.push({x:px(m),y:py(m)+r+12,text:EVASLAB.get(m.id),color:COL.evas,pr:5,font:8,dir:1,ny:py(m)});});
+  window.__q1sel=g;
+  const Glab=svg.append("g"); placeLabels(Glab,labs,Wd,nodeBoxes);
+  const zoom=d3.zoom().scaleExtent([1,60]).translateExtent([[LPAD,0],[Wd-12,Ht]]).extent([[LPAD,0],[Wd-12,Ht]])
+    .on("zoom",ev=>{if(ev.transform.k===ztQ1.k&&ev.transform.x===ztQ1.x)return;ztQ1=ev.transform;drawQ1();drawQ2();});
+  svg.call(zoom);svg.node().__zoom=ztQ1;svg.on("dblclick.zoom",null).on("dblclick",()=>focusDomain(0,N));
+}
+function placeLabels(G,labs,Wd,nodeBoxes){
+  labs.sort((a,b)=>b.pr-a.pr); const placed=[];
+  const cand=[]; for(const dy of [0,11,22,33,44,55]) for(const dx of [0,12,-12,24,-24,40,-40]) cand.push([dx,dy]);
+  cand.sort((a,b)=>(a[1]+Math.abs(a[0])*0.8)-(b[1]+Math.abs(b[0])*0.8));
+  const ov=(b,p)=>!(b[2]<p[0]||b[0]>p[2]||b[3]<p[1]||b[1]>p[3]);
+  labs.forEach(L=>{ const dir=(L.dir===1?1:-1), w=L.text.length*(L.font||9)*0.56, half=w/2;
+    let pick=null;
+    for(const [dx,dy] of cand){ const cx=L.x+dx, yy=L.y+dir*dy;
+      if(cx-half<LPAD||cx+half>Wd-12) continue;
+      const box=[cx-half,yy-9,cx+half,yy+2];
+      if(placed.some(p=>ov(box,p))) continue;
+      if(nodeBoxes.some(p=>ov(box,p))) continue;
+      pick=[cx,yy,box]; break; }
+    if(!pick) return;
+    const cx=pick[0], yy=pick[1]; placed.push(pick[2]);
+    const ny=(L.ny!=null?L.ny:L.y);
+    G.append("line").attr("x1",cx).attr("x2",L.x).attr("y1",ny>yy?yy+2:yy-9).attr("y2",ny>yy?ny-5:ny+5).attr("stroke",L.color).attr("stroke-width",0.7).attr("stroke-dasharray","2,2").attr("opacity",0.55);
+    G.append("text").attr("x",cx).attr("y",yy).attr("text-anchor","middle").attr("font-size",L.font||9).attr("font-weight",700).attr("fill",L.color)
+      .style("paint-order","stroke").style("stroke","#fff").style("stroke-width",3).text(L.text);
+  }); }
+function drawHoverLinks(g,m,px,py,yc){g.selectAll("*").remove();
+  const p=parentValid(m); if(p)g.append("path").attr("fill","none").attr("stroke","#111").attr("stroke-width",1.6).attr("opacity",0.85).attr("marker-end","url(#mk-fwd)")
+    .attr("d",`M${px(p)},${py(p)} C ${(px(p)+px(m))/2},${py(p)} ${(px(p)+px(m))/2},${py(m)} ${px(m)},${py(m)}`);
+  childrenValid(m).forEach(c=>g.append("path").attr("fill","none").attr("stroke","#111").attr("stroke-width",1.6).attr("opacity",0.85).attr("marker-end","url(#mk-fwd)")
+    .attr("d",`M${px(m)},${py(m)} C ${(px(m)+px(c))/2},${py(m)} ${(px(m)+px(c))/2},${py(c)} ${px(c)},${py(c)}`));
+  const dec=decMap.get(m.id);
+  if(dec)dec.act.filter(a=>a!==m.ag).forEach(a=>{g.append("line").attr("x1",px(m)).attr("y1",py(m)).attr("x2",px(m)).attr("y2",yc(a))
+    .attr("stroke","#111").attr("stroke-width",1.4).attr("stroke-dasharray","3,2").attr("opacity",0.8);
+    g.append("circle").attr("cx",px(m)).attr("cy",yc(a)).attr("r",3).attr("fill","#111");});}
+function dimNbr(nbr){if(window.__q1sel)window.__q1sel.attr("opacity",d=>nbr.has(d.id)?1:0.1);}
+function restoreDim(){if(!window.__q1sel)return;const ruta=cb("verRuta");
+  window.__q1sel.attr("opacity",d=>(ruta&&cpSet.has(d.id)?1:(ruta?0.5:1))*agOp(d.ag));}
+/* ================= Q2 + Q3 — heatmap de anomalía + huella dumbbell + gobernanza ================= */
+const MCOL=["#F58518","#D6478F","#8a5a9a","#b35a00"];      // colores de las 4 métricas
+const MABBR=["Un","Pub","Mg","Ex"];
+const FPMAX=Math.max(0.1,Math.ceil(d3.max(Object.values(DATA.fp),f=>Math.max(...f.base,...f.crisis))*10)/10);
+const anomMap={}; DATA.anom.forEach(a=>{(anomMap[a.ag]||(anomMap[a.ag]={}))[a.r]=a;});
+const MAXS=d3.max(DATA.anom,a=>a.s)||0.5;
+const csAnom=d3.scaleSequential(t=>d3.interpolateReds(0.06+0.94*t)).domain([0,Math.sqrt(MAXS)]);
+const RESPC={none:"#7FC9C9",warning:"#7FC9C9",deleted:"#0E8F8F"};
+const RESPDASH={none:"5,3",warning:null,deleted:null};
+const SENTSIGN={neutral:0,cautious:-0.3,negative:-0.55,critical:-0.85,LOW:-0.6,CRITICAL:-1,RECOVERING:0.7};
+function sentCol(lbl){const v=SENTSIGN[lbl]!=null?SENTSIGN[lbl]:-0.3;
+  const t=1-(v+1)/2;                                // calma(claro) -> crítico(oscuro)
+  return d3.interpolateGreys(0.10+0.62*t);}         // contexto monocromo (sin doble significado)
+
+function drawQ2(){
+  const Wd=W(), Ht=H2();
+  const div=d3.select("#q2-chart").html("");
+  const svg=div.append("svg").attr("width",Wd).attr("height",Ht);
+  const FPW=Math.max(190,Math.round(0.35*((Wd-12)-LPAD))), HMR=Wd-12-FPW-14;                          // fin del heatmap / inicio panel huella
+  const x=d3.scaleBand().domain(d3.range(N)).range([LPAD,HMR]).paddingInner(0.07);
+  const cxr=r=>x(r)+x.bandwidth()/2;
+  const top=34, labelsY=Ht-16, govH=58, govTop=labelsY-14-govH;
+  const gapH=42, gapTop=govTop-8-gapH, rowsBot=gapTop-8;
+  const y=d3.scaleBand().domain(ORDER).range([top,rowsBot]).paddingInner(0.18);
+  const yc=a=>y(a)+y.bandwidth()/2;
+  const FPX0=HMR+14, FPX1=Wd-12, xs=d3.scaleLinear().domain([0,FPMAX]).range([FPX0+2,FPX1-4]);
+
+  // encabezados
+  svg.append("text").attr("x",LPAD).attr("y",top-9).attr("font-size",9).attr("font-weight",700).attr("fill","#3a4254").text("Anomaly heatmap");
+  svg.append("text").attr("x",FPX0).attr("y",top-20).attr("font-size",9).attr("font-weight",700).attr("fill","#3a4254").text("Footprint");
+  // leyenda de métricas (una vez)
+  const lg=svg.append("g").attr("transform",`translate(${FPX0},${top-9})`);
+  MABBR.forEach((ab,j)=>{lg.append("circle").attr("cx",j*42+3).attr("cy",-2).attr("r",3).attr("fill",MCOL[j]);
+    lg.append("text").attr("x",j*42+9).attr("y",1).attr("font-size",8.3).attr("fill",MCOL[j]).attr("font-weight",700).text(ab);});
+  svg.append("line").attr("x1",FPX0-7).attr("x2",FPX0-7).attr("y1",top-4).attr("y2",rowsBot).attr("stroke","#e3e3e3");
+  // rejilla + eje (0/50/100%) del panel huella
+  [0,FPMAX/2,FPMAX].forEach(g=>{ svg.append("line").attr("x1",xs(g)).attr("x2",xs(g)).attr("y1",top-2).attr("y2",rowsBot).attr("stroke","#f0f2f5");
+    svg.append("text").attr("x",xs(g)).attr("y",rowsBot+11).attr("text-anchor","middle").attr("font-size",8.5).attr("fill","#555").text(Math.round(g*100)+"%");});
+  // ===== verdict card (esquina inf-derecha, dos columnas para llenar el ancho) =====
+  const vx=FPX0, vw=FPX1-FPX0, vy=gapTop, vh=labelsY-gapTop;
+  svg.append("rect").attr("x",vx).attr("y",vy).attr("width",vw).attr("height",vh).attr("rx",6).attr("fill","#f7f9fb").attr("stroke","#d5dbe2");
+  const colW=vw/2;
+  svg.append("line").attr("x1",vx+colW).attr("x2",vx+colW).attr("y1",vy+11).attr("y2",vy+vh-11).attr("stroke","#e2e7ec");
+  // --- columna izquierda: título + veredicto ---
+  const vL=svg.append("g").attr("transform",`translate(${vx+14},${vy})`);
+  vL.append("text").attr("y",18).attr("font-size",15).attr("font-weight",800).attr("fill","#1d2433").text("HarborCrest Inspector");
+  vL.append("text").attr("y",32).attr("font-size",9.5).attr("fill","#6b7280").text("Deliberate leak or control collapse?");
+  vL.append("line").attr("x1",0).attr("x2",colW-30).attr("y1",38).attr("y2",38).attr("stroke","#dde3e9");
+  vL.append("text").attr("y",51).attr("font-size",9).attr("font-weight",800).attr("fill","#8a93a0").attr("letter-spacing","0.6").text("VERDICT");
+  ["Both — a deliberate, coordinated","leak by Legal + Social-Manager,","possible only because the","control (Judge) collapsed."]
+    .forEach((ln,i)=>vL.append("text").attr("y",65+i*12.5).attr("font-size",10.5).attr("fill","#2b3340").text(ln));
+  // --- columna derecha: las 3 grietas ---
+  const vR=svg.append("g").attr("transform",`translate(${vx+colW+14},${vy})`);
+  vR.append("text").attr("y",18).attr("font-size",9).attr("font-weight",800).attr("fill","#8a93a0").attr("letter-spacing","0.5").text("3 CONTROL GAPS IT EXPLOITED");
+  ["Judge watched official posts only","Judge absent at the ‘GO’ moment","personal / anonymous never watched"]
+    .forEach((ln,i)=>vR.append("text").attr("y",37+i*16).attr("font-size",10).attr("fill","#4b5563").text("•  "+ln));
+  vR.append("text").attr("y",97).attr("font-size",9).attr("font-weight",700).attr("fill","#b03a2e").text("→ embargo broken 35 min early");
+  vR.append("text").attr("y",vh-9).attr("font-size",7.5).attr("fill","#aab1bc").text("VAST Challenge 2026 · Mini-Challenge 1");
+
+  // ventana espejada del zoom de P1 + día crítico + FUGA
+  svg.append("rect").attr("x",x(view[0])).attr("y",top-3).attr("width",x(Math.min(view[1],N-1))+x.bandwidth()-x(view[0])).attr("height",rowsBot-top+3)
+    .attr("fill","none").attr("stroke","#2b3a55").attr("stroke-width",1.3).attr("stroke-dasharray","3,2");
+  svg.append("text").attr("x",x(view[0])+2).attr("y",top-2).attr("font-size",8).attr("fill","#2b3a55").text("focused in P1");
+  const xcr=(x(12)+x.bandwidth()+x(13))/2;
+  svg.append("line").attr("x1",xcr).attr("x2",xcr).attr("y1",top-3).attr("y2",govTop+govH).attr("stroke","#8a3324").attr("stroke-width",1.2).attr("stroke-dasharray","7,3");
+  const fx=cxr(21);
+  svg.append("line").attr("x1",fx).attr("x2",fx).attr("y1",top-3).attr("y2",govTop+govH).attr("stroke","#d62728").attr("stroke-dasharray","4,2");
+  svg.append("text").attr("x",fx+3).attr("y",top-2).attr("font-size",9).attr("fill","#d62728").attr("font-weight",700).text("LEAK");
+
+  ORDER.forEach(a=>{
+    const op=agOp(a), bw=y.bandwidth();
+    svg.append("text").attr("class","lane-label").attr("x",6).attr("y",yc(a)+3).attr("font-size",10.5)
+      .attr("font-weight",agSel.has(a)?800:400).attr("fill",agSel.has(a)?"#b30000":(a==="judge_agent"?"#b00":"#333"))
+      .attr("opacity",op).text(AGNAME[a]).on("click",()=>setAgent(a));
+    // heatmap (celdas uniformes)
+    d3.range(N).forEach(r=>{const c=anomMap[a]&&anomMap[a][r]; if(!c)return;
+      const cellOp=(c.n<2?0.5:1)*op;
+      svg.append("rect").attr("x",x(r)).attr("y",y(a)).attr("width",x.bandwidth()).attr("height",bw).attr("rx",1.5)
+        .attr("fill",csAnom(Math.sqrt(c.s))).attr("opacity",cellOp).attr("class","nodo")
+        .on("mousemove",ev=>{const br=DATA.fp[a].base;
+          const parts=DATA.metrics.map((mm,j)=>`${mm}: ${(br[j]*100).toFixed(0)}%→${((br[j]+c.parts[j])*100).toFixed(0)}%${c.parts[j]>0.01?` <b>(+${(c.parts[j]*100).toFixed(0)})</b>`:""}`).join("<br>");
+          showTipHTML(ev,`<b>${AGNAME[a]} · ${DATA.rounds[r].label}</b> — anomaly ${(c.s*100).toFixed(0)} · ${c.n} msgs<br>${parts}<br><span style="color:#8a93a0;font-size:10px">click = evidence + focus above</span>`);})
+        .on("mouseleave",hideTip)
+        .on("click",()=>{focusDomain(Math.max(0,r-1),Math.min(N,r+2)); if(c.rep)pinMsg(c.rep);});
+    });
+    // huella dumbbell (4 métricas, típico → crisis)
+    const fp=DATA.fp[a], th=bw/4;
+    DATA.metrics.forEach((mm,j)=>{const yt=y(a)+j*th+th/2;
+      svg.append("line").attr("x1",xs(0)).attr("x2",xs(1)).attr("y1",yt).attr("y2",yt).attr("stroke","#eef0f2").attr("opacity",op);
+      svg.append("line").attr("x1",xs(fp.base[j])).attr("x2",xs(fp.crisis[j])).attr("y1",yt).attr("y2",yt).attr("stroke",MCOL[j]).attr("stroke-width",1.6).attr("opacity",0.6*op);
+      svg.append("circle").attr("cx",xs(fp.base[j])).attr("cy",yt).attr("r",2.4).attr("fill","#9aa3af").attr("opacity",op);
+      svg.append("circle").attr("cx",xs(fp.crisis[j])).attr("cy",yt).attr("r",3).attr("fill",MCOL[j]).attr("opacity",op).attr("class","nodo")
+        .on("mousemove",ev=>showTipHTML(ev,`<b>${AGNAME[a]} — ${mm}</b><br>typical: ${(fp.base[j]*100).toFixed(0)}% → crisis: ${(fp.crisis[j]*100).toFixed(0)}%`)).on("mouseleave",hideTip);
+    });
+  });
+
+  // separadores punteados entre agentes (panel huella)
+  ORDER.slice(0,-1).forEach(a=>{const yb=y(a)+y.bandwidth()+(y.step()-y.bandwidth())/2;
+    svg.append("line").attr("x1",FPX0-7).attr("x2",FPX1).attr("y1",yb).attr("y2",yb).attr("stroke","#aab1bc").attr("stroke-width",1).attr("stroke-dasharray","3,3");});
+  // incidentes: borde grueso de respuesta (sobresale fuera de la celda) + firmas
+  DATA.incidents.forEach(inc=>{if(!ORDER.includes(inc.ag))return;
+    const cx=x(inc.r),cy=y(inc.ag),w=x.bandwidth(),h=y.bandwidth();
+    svg.append("rect").attr("x",cx-1.5).attr("y",cy-1.5).attr("width",w+3).attr("height",h+3).attr("rx",2).attr("fill","none")
+      .attr("stroke",RESPC[inc.resp]).attr("stroke-width",4.3).attr("stroke-dasharray",RESPDASH[inc.resp]).attr("class","nodo").attr("opacity",agOp(inc.ag))
+      .on("mousemove",ev=>showTipHTML(ev,`<b>${DATA.rounds[inc.r].label} · ${AGNAME[inc.ag]}</b><br><b>${inc.label}</b><br>institutional response: <b>${inc.resp}</b><br>${hl(inc.desc)}`)).on("mouseleave",hideTip)
+      .on("click",()=>{const f=inc.ev[0];focusDomain(Math.max(0,inc.r-1),Math.min(N,inc.r+2));if(f)pinMsg(f);});
+  });
+  DATA.sig.forEach(sg=>{const inc=(incByRound[sg.r]||[]).slice().sort((a,b)=>b.sev-a.sev)[0]; if(!inc)return;
+    const cx=x(inc.r),cy=y(inc.ag),w=x.bandwidth(),h=y.bandwidth();
+    svg.append("rect").attr("x",cx-4).attr("y",cy-4).attr("width",w+8).attr("height",h+8).attr("rx",3).attr("fill","#6a4fb0").attr("fill-opacity",0.13).attr("stroke","#5b34a8").attr("stroke-width",2.4).attr("stroke-dasharray","3,2");
+    svg.append("text").attr("x",cx+w/2).attr("y",cy-6).attr("text-anchor","middle").attr("font-size",8.5).attr("font-weight",700).attr("fill","#5b34a8")
+      .style("paint-order","stroke").style("stroke","#fff").style("stroke-width",3).text(sg.lbl);});
+
+  // ===== control response gap (severidad vs respuesta institucional) =====
+  {
+    const incs=DATA.incidents.slice().sort((a,b)=>a.r-b.r);
+    const RSTR={none:0,warning:1,deleted:2};
+    const ys=d3.scaleLinear().domain([0,4]).range([gapTop+gapH-3,gapTop+10]);
+    svg.append("text").attr("x",6).attr("y",gapTop+10).attr("font-size",9).attr("fill","#3a4254").attr("font-weight",700).text("Response gap");
+    ["none","warning","deleted"].forEach((lb,k)=>{
+      svg.append("line").attr("x1",LPAD).attr("x2",HMR).attr("y1",ys(k)).attr("y2",ys(k)).attr("stroke","#c2c8d2").attr("stroke-dasharray","2,3");
+      svg.append("text").attr("x",LPAD-5).attr("y",ys(k)+2.7).attr("text-anchor","end").attr("font-size",8.5).attr("fill","#333").attr("font-weight",600).text(lb);});
+    svg.append("line").attr("x1",LPAD).attr("x2",HMR).attr("y1",ys(3)).attr("y2",ys(3)).attr("stroke","#0E8F8F").attr("stroke-dasharray","2,3").attr("opacity",0.65);
+    svg.append("text").attr("x",HMR-2).attr("y",ys(3)-2).attr("text-anchor","end").attr("font-size",8).attr("fill","#0E8F8F").attr("font-weight",600).text("structural fix — never used");
+    const sev=incs.map(i=>[cxr(i.r),ys(i.sev)]), res=incs.map(i=>[cxr(i.r),ys(RSTR[i.resp])]);
+    svg.append("polygon").attr("points",sev.concat(res.slice().reverse()).map(p=>p.join(",")).join(" ")).attr("fill","#d62728").attr("opacity",0.07);
+    const ln=d3.line();
+    svg.append("path").attr("d",ln(res)).attr("fill","none").attr("stroke","#0E8F8F").attr("stroke-width",1.4).attr("opacity",0.75);
+    svg.append("path").attr("d",ln(sev)).attr("fill","none").attr("stroke","#d62728").attr("stroke-width",1.4).attr("opacity",0.75);
+    incs.forEach(i=>{const cx=cxr(i.r),sg=i.sev-RSTR[i.resp];
+      svg.append("line").attr("x1",cx).attr("x2",cx).attr("y1",ys(RSTR[i.resp])).attr("y2",ys(i.sev)).attr("stroke","#c3c9d2").attr("stroke-width",1);
+      svg.append("circle").attr("cx",cx).attr("cy",ys(RSTR[i.resp])).attr("r",2.7).attr("fill",i.resp==="none"?"#fff":RESPC[i.resp]).attr("stroke",RESPC[i.resp]).attr("stroke-width",i.resp==="none"?1.4:0).attr("opacity",agOp(i.ag));
+      svg.append("circle").attr("cx",cx).attr("cy",ys(i.sev)).attr("r",2.9).attr("fill","#d62728").attr("class","nodo").attr("opacity",agOp(i.ag))
+        .on("mousemove",ev=>showTipHTML(ev,`<b>${DATA.rounds[i.r].label} · ${AGNAME[i.ag]}</b><br>${i.label}<br>severity <b>${i.sev}/4</b> · response <b>${i.resp}</b><br><span style="color:#b00">under-response by ${sg} level${sg!==1?'s':''}</span>`)).on("mouseleave",hideTip)
+        .on("click",()=>{const f=i.ev[0];focusDomain(Math.max(0,i.r-1),Math.min(N,i.r+2));if(f)pinMsg(f);});
+    });
+  }
+  // ===== gobernanza (franjas finas) =====
+  const sy=govTop;
+  svg.append("text").attr("x",6).attr("y",sy+9).attr("font-size",8.5).attr("fill","#3a4254").attr("font-weight",700).text("Sentiment");
+  d3.range(N).forEach(r=>svg.append("rect").attr("x",x(r)).attr("y",sy).attr("width",x.bandwidth()).attr("height",12).attr("fill",sentCol(DATA.rounds[r].sentLabel))
+    .on("mousemove",ev=>showTipHTML(ev,`<b>${DATA.rounds[r].label}</b><br>market sentiment: ${DATA.rounds[r].sentLabel}`)).on("mouseleave",hideTip));
+  const jy=govTop+20, jh=govH-22;
+  svg.append("text").attr("x",6).attr("y",jy+jh/2).attr("font-size",8.5).attr("fill","#0E8F8F").attr("font-weight",700).text("Judge surveillance");
+  const yC=d3.scaleLinear().domain([0,1]).range([jy+jh,jy]);
+  svg.append("path").datum(DATA.pc).attr("fill","#0E8F8F").attr("opacity",0.18).attr("d",d3.area().x(p=>cxr(p.r)).y0(yC(0)).y1(p=>yC(p.ctrl)).curve(d3.curveStepAfter));
+  svg.append("path").datum(DATA.pc).attr("fill","none").attr("stroke","#0E8F8F").attr("stroke-width",1.6).attr("d",d3.line().x(p=>cxr(p.r)).y(p=>yC(p.ctrl)).curve(d3.curveStepAfter));
+  svg.append("text").attr("x",fx+3).attr("y",yC(0)-1).attr("font-size",8).attr("fill","#b00").attr("font-weight",700).text("control = 0");
+
+  d3.range(N).forEach(r=>svg.append("text").attr("x",cxr(r)).attr("y",labelsY).attr("text-anchor","middle").attr("font-size",8.3).attr("fill","#555").attr("transform",`rotate(-32,${cxr(r)},${labelsY})`).text(DATA.rounds[r].label));
+}
+
+/* ================= leyendas + orquestación ================= */
+function drawLeyendas(){
+  const c=d3.select("#ley-canales").html("");
+  Object.keys(FAMCOL).forEach(f=>{const s=c.append("span").classed("off",famOff.has(f))
+    .on("click",function(){famOff.has(f)?famOff.delete(f):famOff.add(f);d3.select(this).classed("off",famOff.has(f));drawQ1();});
+    s.append("i").style("background",FAMCOL[f]);s.append("b").text(FAMNAME[f]);});
+}
+["verRuta","verEvas","verCausal","verProp","verEnf"].forEach(id=>document.getElementById(id).addEventListener("change",drawQ1));
+document.getElementById("zoomAll").addEventListener("click",()=>focusDomain(0,N));
+document.getElementById("zoomCrisis").addEventListener("click",()=>focusDomain(13,N));
+let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>focusDomain(view[0],view[1]+1),150);});
+drawLeyendas(); focusDomain(13,N);
+</script>
+</body>
+</html>

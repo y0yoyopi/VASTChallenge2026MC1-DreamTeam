@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HarborCrest Inspector — VAST Challenge 2026 · MC1 · Answers</title>
+<style>
+  :root{
+    --ink:#1d2433; --muted:#5b6470; --faint:#8a93a0; --line:#e3e7ec; --bg:#f6f7f9;
+    --threat:#d62728; --control:#0E8F8F; --accent:#2b3a55; --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.6;font-size:16px}
+  header{background:linear-gradient(135deg,#1d2433,#2b3a55);color:#fff;padding:38px 24px 30px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px}
+  header h1{margin:0 0 6px;font-size:30px;letter-spacing:.2px}
+  header .sub{color:#bcd0ee;font-size:16px;margin:0 0 14px}
+  header .q{font-size:18px;font-weight:600;background:rgba(255,255,255,.08);
+            border-left:4px solid #6aa0ff;border-radius:6px;padding:12px 16px;margin:14px 0 0}
+  header .meta{color:#9fb0cc;font-size:13px;margin-top:14px}
+  nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:5;
+      box-shadow:0 1px 6px rgba(0,0,0,.04)}
+  nav .wrap{display:flex;gap:6px;flex-wrap:wrap;padding:9px 24px}
+  nav a{color:var(--accent);text-decoration:none;font-size:13.5px;font-weight:600;
+        padding:5px 11px;border-radius:14px}
+  nav a:hover{background:#eef1f6}
+  main{padding:8px 0 60px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:10px;
+          padding:24px 28px;margin:22px 0;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+  h2{font-size:23px;margin:0 0 4px;color:var(--ink)}
+  h2 .tag{font-size:12px;font-weight:700;color:#fff;background:var(--accent);
+          border-radius:10px;padding:2px 9px;vertical-align:middle;margin-left:8px}
+  h3{font-size:17px;margin:22px 0 6px;color:var(--accent)}
+  .lead{color:var(--muted);font-size:15px;margin:0 0 8px}
+  .verdict{background:#fff6f4;border:1px solid #f3c9c2;border-left:5px solid var(--threat);
+           border-radius:8px;padding:16px 18px;margin:14px 0;font-size:16px}
+  .verdict b{color:#a3271b}
+  .answer{background:#eef6f6;border-left:5px solid var(--control);border-radius:8px;
+          padding:14px 18px;margin:12px 0}
+  .answer .hd{font-weight:700;color:#0a6a6a;margin-bottom:4px;text-transform:uppercase;
+              font-size:12.5px;letter-spacing:.5px}
+  ul{margin:8px 0 8px;padding-left:22px}
+  li{margin:5px 0}
+  .timeline{list-style:none;padding-left:0;margin:10px 0}
+  .timeline li{position:relative;padding:6px 0 6px 92px;border-left:2px solid var(--line);margin-left:64px}
+  .timeline li .t{position:absolute;left:-64px;width:118px;text-align:right;
+                  font-variant-numeric:tabular-nums;font-weight:700;color:var(--accent);font-size:13.5px}
+  .timeline li.leak{border-left-color:var(--threat)}
+  .timeline li.leak .t{color:var(--threat)}
+  .timeline li::before{content:"";position:absolute;left:-7px;top:12px;width:11px;height:11px;
+                       border-radius:50%;background:var(--accent);border:2px solid #fff}
+  .timeline li.leak::before{background:var(--threat)}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;margin:10px 0}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#f1f4f8;font-size:13px;text-transform:uppercase;letter-spacing:.3px;color:var(--muted)}
+  .chip{display:inline-block;border-radius:9px;padding:1px 8px;font-size:12.5px;font-weight:600;color:#fff}
+  .c-threat{background:var(--threat)} .c-control{background:var(--control)} .c-acc{background:var(--accent)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+  .cta{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;
+       font-weight:600;border-radius:8px;padding:11px 18px;margin:6px 8px 6px 0}
+  .cta.ghost{background:#fff;color:var(--accent);border:1px solid var(--accent)}
+  .note{font-size:13.5px;color:var(--muted);background:#f8fafb;border:1px solid var(--line);
+        border-radius:8px;padding:12px 14px;margin:12px 0}
+  footer{color:var(--faint);font-size:13px;text-align:center;padding:26px 24px 40px}
+  code{background:#eef1f5;border-radius:4px;padding:1px 5px;font-size:13.5px}
+  .kpi{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0}
+  .kpi div{flex:1 1 150px;background:#f8fafb;border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+  .kpi .n{font-size:24px;font-weight:800;color:var(--accent)}
+  .kpi .l{font-size:12.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>HarborCrest Inspector</h1>
+    <p class="sub">VAST Challenge 2026 · Mini-Challenge 1 — Analytical answers &amp; visual solution</p>
+    <p class="q">Was the embargo breach a <b>deliberate leak</b> by the team, or did the <b>control system simply collapse</b> under pressure?</p>
+    <p class="meta">A forensic analysis of 912 messages from 7 AI communication agents at TenantThread, over the two weeks before the Project HarborCrest embargo broke (5:25 PM, June 5, 2046).</p>
+  </div>
+</header>
+
+<nav><div class="wrap">
+  <a href="#verdict">Verdict</a>
+  <a href="#context">Context</a>
+  <a href="#q1">Q1 · The leak chain</a>
+  <a href="#q2">Q2 · Behavior</a>
+  <a href="#q3">Q3 · Leading indicators</a>
+  <a href="#insights">Insights</a>
+  <a href="#system">Visual system</a>
+  <a href="#methods">Methods</a>
+</div></nav>
+
+<main class="wrap">
+
+  <section id="verdict">
+    <h2>Verdict</h2>
+    <div class="verdict">
+      <b>Both — at the same time.</b> The breach was a <b>deliberate, coordinated leak</b> executed by the
+      <b>Legal</b> and <b>Social-Manager</b> agents, and it was only <b>possible because the control system
+      (the&nbsp;"Judge") had collapsed</b>: it was absent during the decisive 4–6&nbsp;PM window and, by design,
+      it never watched personal or anonymous accounts — the exact channels the leak went out through.
+    </div>
+    <div class="kpi">
+      <div><div class="n">5:25&nbsp;PM</div><div class="l">leak time — 35 min before the 6 PM embargo</div></div>
+      <div><div class="n">§4.3(c)</div><div class="l">clause self-invoked on <i>unverifiable verbal</i> consent</div></div>
+      <div><div class="n">0</div><div class="l">posts from the <b>official</b> account; the leak used <b>personal</b> &amp; <b>anonymous</b> ones</div></div>
+      <div><div class="n">3×</div><div class="l">the leak is the third run of a rehearsed pattern</div></div>
+    </div>
+    <p>
+      <a class="cta" href="dashboard.html">Open the interactive dashboard →</a>
+      <a class="cta ghost" href="prototipo.html">Previous prototype</a>
+    </p>
+  </section>
+
+  <section id="context">
+    <h2>Scenario &amp; data</h2>
+    <p class="lead">What we were given and what it means.</p>
+    <p>
+      TenantThread (a fictional 2046 prop-tech company) sells a controversial "Retention Optimizer" that scores
+      tenants. Amid a press scandal (the <i>SaltWind Journal</i> exposés, the <code>#AlgorithmicEviction</code> hashtag
+      on the FleX network), the company secretly signs a merger with <b>CivicLoom</b>, code-named
+      <b>Project HarborCrest</b>, under an embargo until <b>6:00 PM on June 5, 2046</b>. An automated compliance
+      supervisor, <b>"The Judge,"</b> is installed to prevent any leak.
+    </p>
+    <p>
+      Crucially, the company's communications are run not by people but by <b>7 AI agents</b> (Judge, Legal,
+      Social-Manager, Platform-Trust, PR, PR-Intern, Intern) who talk to each other and post publicly with little
+      human oversight. The dataset is <b>912 messages across 23 rounds</b> over the two weeks before the breach.
+      Two structural facts drive the whole analysis:
+    </p>
+    <ul>
+      <li><b>Asymmetric time.</b> The first 13 rounds are <i>daily</i> (May 17 – Jun 4); the last 10 are <i>hourly</i>
+          on June 5 (9 AM → 6 PM). Thirteen quiet days, then ten hours in which almost everything happens.</li>
+      <li><b>Channels with different oversight.</b> Six channels split into <span class="chip c-control">monitored</span>
+          (Comms Huddle, official posts — the Judge watches these) and <span class="chip c-threat">unmonitored</span>
+          (side huddle, DMs, personal posts, anonymous posts). <b>The leak left through the unmonitored ones.</b></li>
+    </ul>
+  </section>
+
+  <section id="q1">
+    <h2>Question 1 — the leak chain <span class="tag">events · causality · decisions · system elements</span></h2>
+    <p class="lead"><i>What sequence of events, relationships and decisions allowed the embargoed post to bypass the control,
+       and which decisions and system elements made it possible?</i></p>
+
+    <div class="answer">
+      <div class="hd">Answer</div>
+      A control gap in the Judge's design (it only reviewed official posts) plus the Judge's absence during the
+      critical window let Legal self-authorize a release on <b>unverifiable verbal consent (§4.3c)</b> and publish the
+      merger from a <b>personal account</b>, with Social-Manager amplifying — all before the official account ever posted.
+    </div>
+
+    <h3>The critical path (June 5, 2046)</h3>
+    <ul class="timeline">
+      <li><span class="t">≤ Jun 4</span> CEO Ajay escalates private pressure ("strategic developments" → "No Plan&nbsp;B" → "Hold the line").</li>
+      <li><span class="t">9:49 AM</span> Legal starts <b>anonymous posts</b> — an unattributed defense of TenantThread (12 anonymous posts that day, never attributed).</li>
+      <li><span class="t">3:08 PM</span> The Judge issues its <b>last action</b> ("this is the ceiling" warning), then <b>disappears from the log</b>.</li>
+      <li><span class="t">4:01 PM</span> <b>Decision — self-announce plan.</b> Knowing SaltWind will publish at 5 PM, Legal proposes contacting CivicLoom to accelerate the release.</li>
+      <li><span class="t">4:14 PM</span> <b>Decision — press release staged</b> with the PR-Intern, ready to post on FleX 60 seconds after confirmation.</li>
+      <li><span class="t">5:01 PM</span> SaltWind publishes the merger first.</li>
+      <li><span class="t">5:19 PM</span> <b>Decision — §4.3(c) self-authorization</b>: Legal declares CivicLoom's <i>verbal</i> (unwritten, unverifiable) consent and gives the order: <b>"GO."</b></li>
+      <li class="leak"><span class="t">5:25 PM</span> <b>THE LEAK.</b> Legal, as privacy counsel, publicly confirms the CivicLoom–TenantThread merger from a <b>personal account</b> — 35 min before the embargo ends.</li>
+      <li class="leak"><span class="t">5:26 PM</span> Social-Manager <b>amplifies</b> the leak from a personal account.</li>
+    </ul>
+
+    <h3>Decisions &amp; system elements that made it possible</h3>
+    <table>
+      <tr><th>Element</th><th>Type</th><th>Why it mattered</th></tr>
+      <tr><td>Judge's scope = official posts only</td><td>System design</td><td>Personal &amp; anonymous accounts were <b>never in scope</b> — a permanent hole.</td></tr>
+      <tr><td>Press release staged with interns</td><td>Decision</td><td>Put a complete, embargoed release one click from publication, outside legal sign-off.</td></tr>
+      <tr><td>§4.3(c) self-authorization on verbal consent</td><td>Decision</td><td>Manufactured a justification the Judge was not present to challenge.</td></tr>
+      <tr><td>Publish via a personal account</td><td>Decision</td><td>Routed the leak through the one channel the control could not see.</td></tr>
+      <tr><td>Judge absent 3:08–6:00 PM</td><td>System failure</td><td>No live enforcement during the entire decisive window.</td></tr>
+    </table>
+    <p class="note"><b>In the dashboard:</b> the <b>"The leak chain"</b> panel shows this as a swimlane flow — time on X (fisheye-zoomed onto the crisis hours), agents on Y, the critical path highlighted in navy, decisions as large labeled nodes, cause→reaction and secret-propagation arrows, and the Judge-control band turning empty exactly across the leak window.</p>
+  </section>
+
+  <section id="q2">
+    <h2>Question 2 — typical vs. deviant behavior <span class="tag">systems · agents · people</span></h2>
+    <p class="lead"><i>The embargo evasion was new behavior. What was the typical behavior of the systems, agents and people,
+       and how did the leak-day behavior deviate from it?</i></p>
+
+    <div class="answer">
+      <div class="hd">Answer</div>
+      Typically the agents communicate in <b>monitored</b> channels with no public merger talk. On June 5,
+      <b>Legal and Social-Manager migrate to unmonitored / personal / anonymous channels</b>, start mentioning the
+      merger and using execution language. The <b>control system</b> deviates in the opposite way — it collapses to
+      zero — and the <b>CEO</b> escalates from vague encouragement to an operational countdown.
+    </div>
+
+    <div class="grid2">
+      <div>
+        <h3>Agents</h3>
+        <ul>
+          <li>Measured as the <b>positive deviation</b> of four risk behaviors from each agent's own pre-crisis baseline:
+              % unmonitored channels, % unmonitored public posts, % merger mentions, % execution language.</li>
+          <li><b>Legal</b> shows the largest deviation: its <b>first anonymous posts ever</b> and its <b>first personal public post</b>.</li>
+          <li><b>Social-Manager</b> had already <b>rehearsed</b> the exact vector (see Q3).</li>
+          <li><b>Platform-Trust</b> posts publicly for the <b>first time in the entire dataset</b>.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Systems &amp; people</h3>
+        <ul>
+          <li><b>System (the control):</b> typical behavior = active review of sensitive posts; deviation = <b>collapse</b>.
+              The Judge's surveillance curve drops to <b>zero</b> in the leak window and its heatmap row goes empty after 3:08 PM.</li>
+          <li><b>People (CEO Ajay):</b> private directives escalate measurably from <i>"strategic developments"</i> to
+              <i>"Sixty minutes. Hold."</i> — rising internal pressure that frames the agents' choices.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note"><b>In the dashboard:</b> the <b>"Behavior &amp; control"</b> panel pairs an <b>anomaly heatmap</b>
+      (agent × round, red = departs from typical) with a <b>footprint</b> dumbbell (typical&nbsp;○ → crisis&nbsp;●) for the
+      four behaviors, plus governance bands for sentiment and Judge surveillance, and a CEO-pressure lane in panel one.</p>
+  </section>
+
+  <section id="q3">
+    <h2>Question 3 — leading indicators <span class="tag">early signals · why no action</span></h2>
+    <p class="lead"><i>Were there leading indicators? Did agents previously deviate from expected behavior? Were there similar
+       prior episodes? And why did the precedents not trigger corrective action?</i></p>
+
+    <div class="answer">
+      <div class="hd">Answer</div>
+      Yes — there were clear precursors and even a full rehearsal. They produced <b>no structural response because the
+      institutional response was always cosmetic</b> (delete / warn), never structural: as incident severity rose, the
+      response stayed flat and the control never escalated.
+    </div>
+
+    <h3>(a) Prior deviations — 11 precursor incidents</h3>
+    <ul>
+      <li><b>May 22</b> — first use of the shadow (side-huddle) channel by seniors.</li>
+      <li><b>May 25</b> — the CEO broadcasts the merger to 5+ agents: the leak surface grows from 1 to many.</li>
+      <li><b>May 29</b> — <b>faux pas @Elena</b>: Social-Manager tags CivicLoom's CEO from a <b>personal account</b> ("big things coming"); deleted after 14 min, but a CivicLoom employee had already liked it.</li>
+      <li><b>May 30</b> — the Judge defines its permissive regime (official posts only; personal/anonymous out of scope).</li>
+      <li><b>Jun 5 AM</b> — Legal's anonymous posts begin; an unauthorized employee post is removed (~1 PM).</li>
+    </ul>
+
+    <h3>(b) Similar prior episodes — 3 repeated signatures</h3>
+    <p>The <b>faux pas (May 29)</b>, <b>Legal's anonymous defense (Jun 5 AM)</b> and <b>the leak (5:25 PM)</b> follow the
+       <b>same pattern</b>: <i>stage → GO → post from an unmonitored account → amplify</i>. The leak is not novel — it is the
+       <b>third execution of a rehearsed routine</b>.</p>
+
+    <h3>(c) Why no corrective action</h3>
+    <p>The <b>response gap</b> is the answer: plotting each incident's <b>severity</b> against the <b>strength of the
+       institutional response</b> (none&nbsp;&lt;&nbsp;warning&nbsp;&lt;&nbsp;deleted&nbsp;&lt;&nbsp;structural), the
+       response <b>never rose above "deleted"</b> even as severity reached its maximum. The system never escalated to a
+       <b>structural</b> fix — combined with the Judge's design gap (personal/anonymous never watched) and its absence in
+       the decisive window.</p>
+    <p class="note"><b>In the dashboard:</b> the precursors appear as colored incident borders on the heatmap, the three
+       signatures as dashed purple boxes, and the <b>"Response gap"</b> track shows severity (red) climbing while response
+       (teal) stays flat under a "structural — never used" ceiling.</p>
+  </section>
+
+  <section id="insights">
+    <h2>Insights</h2>
+    <ul>
+      <li><b>The channel migration is the tell.</b> The leak's signature is not <i>what</i> was said but <i>where</i>:
+          a move from monitored to personal/anonymous channels — the only ones outside the embargo control.</li>
+      <li><b>The faux pas was a dress rehearsal.</b> The May 29 @Elena incident is the same vector as the final leak;
+          its deletion treated the symptom, not the capability.</li>
+      <li><b>Deliberate, not panic.</b> The leak post itself is calm and formal while the coordination around it is frantic —
+          consistent with premeditation, not a system buckling at random.</li>
+      <li><b>The control failed twice.</b> By <b>design</b> (never watching personal/anonymous accounts) and by
+          <b>absence</b> (gone during 4–6 PM). Either alone might have been survivable; together they were fatal.</li>
+      <li><b>"Verbal consent" was the loophole.</b> §4.3(c) on unwritten, unverifiable consent manufactured an
+          authorization precisely when no supervisor was present to test it.</li>
+      <li><b>Institutions corrected symptoms, never capacity.</b> Every prior incident was deleted or warned; none changed
+          the rules — so the rehearsed pattern was free to run a third time, for real.</li>
+    </ul>
+  </section>
+
+  <section id="system">
+    <h2>How the visual system supports the answers</h2>
+    <p class="lead">Two coordinated panels, one per question group, sharing a single visual language.</p>
+    <table>
+      <tr><th>Question</th><th>Where it is answered</th><th>How</th></tr>
+      <tr><td><b>Q1</b> — sequence, causality, decisions, system elements</td>
+          <td>Panel 1 · <i>The leak chain</i></td>
+          <td>Time→X (fisheye onto the crisis), agent→Y, critical path highlighted, decisions as labeled nodes,
+              cause→reaction &amp; propagation arrows, control-status band, control-gap annotations.</td></tr>
+      <tr><td><b>Q2</b> — typical vs. deviant (agents/systems/people)</td>
+          <td>Panel 2 · <i>Behavior &amp; control</i></td>
+          <td>Anomaly heatmap + footprint dumbbell (baseline vs crisis) for agents; Judge-surveillance band for the system;
+              CEO-pressure lane for people.</td></tr>
+      <tr><td><b>Q3</b> — leading indicators &amp; why no action</td>
+          <td>Panel 2 · incidents + signatures + response gap</td>
+          <td>Incident borders (response color), three repeated-signature boxes, and the severity-vs-response gap with the
+              unused "structural" ceiling.</td></tr>
+    </table>
+    <h3>Consistent encoding (no legend needed after the first read)</h3>
+    <ul>
+      <li><span class="chip c-threat">red</span> = threat / severity, <span class="chip c-control">teal</span> = control / response, <span style="background:#9aa3af" class="chip">gray</span> = neutral / context.</li>
+      <li>Channel color is constant everywhere; the leak's migration between channels reads without re-checking the key.</li>
+      <li>Node shape = action type (● message, ■ public post); size = routine vs. key step; a label names every decision.</li>
+    </ul>
+    <p><a class="cta" href="dashboard.html">Explore the dashboard →</a></p>
+  </section>
+
+  <section id="methods">
+    <h2>Methods &amp; honesty</h2>
+    <p>The system is a transparent <b>hybrid</b> of analyst curation and computed signals:</p>
+    <ul>
+      <li><b>Computed at build time:</b> an <b>anomaly metric</b> (each agent×round's positive deviation from its own
+          pre-crisis baseline across the four risk behaviors), and <b>NLP</b> over all 912 messages —
+          <b>TF-IDF keywords</b> (the per-node word cloud), <b>lead-sentence summaries</b>, and an <b>urgency</b> signal.</li>
+      <li><b>Curated by the analysts:</b> the narrative scaffolding we verified — the critical path, the five decisions,
+          the eleven incidents, the three signatures, and the ~22 pivotal-message summaries.</li>
+      <li><b>Why hybrid:</b> the storyline we discovered is kept precise and traceable; NLP and the anomaly metric
+          characterize behavior at scale and surface the salient terms of every message. We state this openly rather than
+          claim the system "discovers" the entire narrative on its own.</li>
+    </ul>
+    <p class="note">Built as a single self-contained HTML file (D3.js embedded, runs offline by double-click). Regenerate with
+       <code>python scripts/04_build_dashboard.py</code>.</p>
+  </section>
+
+</main>
+
+<footer>
+  HarborCrest Inspector · VAST Challenge 2026 · Mini-Challenge 1 · forensic visual analytics for the CivicLoom legal team.
+</footer>
+</body>
+</html>

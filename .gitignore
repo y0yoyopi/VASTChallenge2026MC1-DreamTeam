@@ -1,0 +1,21 @@
+# ── Not part of the final submission (kept locally, excluded from the repo) ──
+_archivo/
+prototipo.html
+figuras/
+data_derivada/
+scripts/01_transform.py
+scripts/02_eda.py
+scripts/03_build_prototipo.py
+scripts/plantilla_prototipo.html
+reportes/01_EDA.md
+reportes/03_Plan_Visualizacion.md
+reportes/04_Guia_Presentacion.md
+data/VAST Challenge 2026 MC1 Answer Sheet.htm
+
+# ── OS / tooling junk ──
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+.ipynb_checkpoints/
+.__t
