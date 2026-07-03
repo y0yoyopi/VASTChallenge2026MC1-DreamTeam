@@ -15,10 +15,10 @@ the two weeks before the Project HarborCrest merger leaked (5:25 PM, June 5, 204
 
 | File | What it is |
 |---|---|
-| **`index.html`** | Start here — the **analytical answers** to the VAST questions (Q1/Q2/Q3), insights and methods. |
+| **`index.htm`** | Start here — the **analytical answers** to the VAST questions (Q1/Q2/Q3), insights and methods. |
 | **`dashboard.html`** | The **interactive visual system** (two coordinated panels). Opens by double-click; D3.js is embedded, so it **runs offline**. |
 
-**Local:** download the repo and open `index.html` (or `dashboard.html`) in any modern browser.
+**Local:** download the repo and open `index.htm` (or `dashboard.html`) in any modern browser.
 **Online (optional):** enable GitHub Pages (*Settings → Pages → deploy from `main` / root*) and the project is served at
 `https://<user>.github.io/<repo>/`.
 
@@ -49,7 +49,7 @@ A single color language runs through both panels: **red = threat/severity · tea
 - **Q3 — leading indicators:** eleven precursor incidents and a full rehearsal (the May 29 faux pas) preceded the leak;
   no structural action followed because the institutional response was always cosmetic (delete/warn), never structural.
 
-Full, evidence-backed answers are in **`index.html`** and **`reportes/02_Respuestas_MC1.md`**.
+Full, evidence-backed answers are in **`index.htm`** and **`reportes/02_Respuestas_MC1.md`**.
 
 ---
 
@@ -75,7 +75,7 @@ single self-contained `dashboard.html`.
 
 ```
 .
-├── index.html                     # analytical answers (submission entry point)
+├── index.htm                     # analytical answers (submission entry point)
 ├── dashboard.html                 # final interactive visual system (self-contained)
 ├── README.md
 ├── data/

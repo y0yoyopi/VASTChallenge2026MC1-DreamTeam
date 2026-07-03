@@ -10,7 +10,7 @@ Este `.md` explica TODO lo necesario para exponer y documentar el proyecto, desd
 
 La entrega se apoya en estos archivos (todos en la carpeta del proyecto):
 
-- **`index.html`** — la portada de la entrega con las **respuestas analíticas** a las preguntas del VAST (en inglés). Es lo primero que abre el evaluador.
+- **`index.htm`** — la portada de la entrega con las **respuestas analíticas** a las preguntas del VAST (en inglés). Es lo primero que abre el evaluador.
 - **`dashboard.html`** — el sistema visual final (esta entrega). Se abre con doble clic; la librería de gráficos (D3) va incrustada, **funciona sin internet**.
 - **`prototipo.html`** — la versión anterior (entrega pasada), conservada intacta para mostrar la evolución.
 - **`reportes/`** — EDA, respuestas detalladas, plan de diseño y este guion.
@@ -220,15 +220,15 @@ El sistema es un **híbrido transparente** entre curación analítica y señales
 
 | Criterio (pts) | Dónde se cubre |
 |---|---|
-| Completeness of deliverables (3) | `index.html` + `dashboard.html` (visual) + repo + video. Faltan repo/video → los arma el equipo con este doc. |
+| Completeness of deliverables (3) | `index.htm` + `dashboard.html` (visual) + repo + video. Faltan repo/video → los arma el equipo con este doc. |
 | Quality of visual solution (4) | Dashboard de 2 paneles coordinados, eje de color coherente, zoom semántico, riel autoexplicativo, hover con NLP. |
-| Analytical answers (4) | `index.html` + PARTE I de este doc: P1/P2/P3 respondidas con evidencia (timestamps, canales, mecanismos). |
+| Analytical answers (4) | `index.htm` + PARTE I de este doc: P1/P2/P3 respondidas con evidencia (timestamps, canales, mecanismos). |
 | Integration analysis↔viz (3) | Cada respuesta mapea a una codificación concreta; PARTE E/F/I. |
 | Repository quality & docs (2) | `README.md` + `reportes/` + scripts reproducibles (`python scripts/04_build_dashboard.py`). |
 | Demo video (2) | Guion minuto a minuto en PARTE M. |
-| Clarity & overall (2) | Lenguaje y estilo consistentes; portada `index.html` profesional. |
+| Clarity & overall (2) | Lenguaje y estilo consistentes; portada `index.htm` profesional. |
 
-**Penalizaciones a evitar (−5 c/u):** entregar (1) solución visual, (2) `index.html`, (3) repo Git con código + documentación, (4) demo/video. Los dos primeros están hechos; (3) y (4) los completa el equipo.
+**Penalizaciones a evitar (−5 c/u):** entregar (1) solución visual, (2) `index.htm`, (3) repo Git con código + documentación, (4) demo/video. Los dos primeros están hechos; (3) y (4) los completa el equipo.
 
 ---
 
@@ -252,7 +252,7 @@ El sistema es un **híbrido transparente** entre curación analítica y señales
 
 **Entregables del curso (obligatorios):**
 1. **Solución visual final** → `dashboard.html` (+ `prototipo.html` como evolución).
-2. **`index.html` con respuestas** → hecho.
+2. **`index.htm` con respuestas** → hecho.
 3. **Repositorio Git con código y documentación** → subir la carpeta; el `README.md` y este `reportes/` ya documentan. Incluir instrucciones de reproducción.
 4. **Demo o video** → grabar siguiendo el guion de la PARTE M.
 
